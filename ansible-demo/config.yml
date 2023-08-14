@@ -13,7 +13,7 @@
           apt:
             name:
               - apt-transport-https
-              - ca-certificate
+              - ca-certificates
               - curl
               - gnupg
               - lsb_release
@@ -51,6 +51,7 @@
             name: docker
             state: restarted
             enabled: yes
+      become: yes
 
 #    - name: Установка Docker compose
 #      block:
@@ -75,9 +76,11 @@
 
         - name: Добавляем пользователя в группу Docker
           user:
-            name: bans29
+            name: "{{ansible_user}}"
             groups: docker
             append: yes
 
         - name: Перезагрузка сервера
-
+          reboot:
+#            reboot_timeout: 300
+      become: yes
