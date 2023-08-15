@@ -16,8 +16,8 @@
               - ca-certificates
               - curl
               - gnupg
-              - lsb_release
-            update-cash: yes
+#              - lsb_release
+            update_cache: true
             cache_valid_time: 86400
 
         - name: Добавление ключа Docker
@@ -27,12 +27,9 @@
 
         - name: Установка стабильного репозитория
           apt_repository:
-            repo: >
-              deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg]
-              https://download.docker.com/linux/ubuntu
-              {{ ansible_dictribution_release }} stable
+            repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
             state: present
-            update-cash: yes
+            update_cache: true
             filename: docker
 
         - name: Установка Docker и Docker-Compose
@@ -43,15 +40,15 @@
               - containerd.io
               - docker-buildx-plugin
               - docker-compose-plugin
-            update-cash: yes
+            update_cache: true
             cache_valid_time: 86400
 
         - name: Проверка что Docker установлен и перезагружен
           service:
             name: docker
             state: restarted
-            enabled: yes
-      become: yes
+            enabled: true
+      become: true
 
 #    - name: Установка Docker compose
 #      block:
@@ -70,17 +67,17 @@
     - name: Завершение установки
       block:
         - name: Проверяем наличие группы Docker
-          groupe:
+          group:
             name: docker
             state: present
 
         - name: Добавляем пользователя в группу Docker
           user:
-            name: "{{ansible_user}}"
+            name: "{{ ansible_user }}"
             groups: docker
-            append: yes
+            append: true
 
         - name: Перезагрузка сервера
           reboot:
 #            reboot_timeout: 300
-      become: yes
+      become: true
