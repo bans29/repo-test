@@ -79,5 +79,5 @@
 
         - name: Перезагрузка сервера
           reboot:
-#            reboot_timeout: 300
+#            reboot_timeout: 200
       become: true
